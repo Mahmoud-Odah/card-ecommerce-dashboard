@@ -2,21 +2,21 @@
 import type { Metadata } from 'next'
 
 // Component Imports
-import Login from '@views/pages/auth/Login'
+import ForgotPassword from '@views/ForgotPassword'
 
 // Server Action Imports
 import { getServerMode } from '@core/utils/serverHelpers'
 
 export const metadata: Metadata = {
-  title: 'Login',
-  description: 'Login to your account'
+  title: 'Forgot Password',
+  description: 'Forgotten Password to your account'
 }
 
-const LoginPage = () => {
+const ForgotPasswordPage = () => {
   // Vars
   const mode = getServerMode()
 
-  return <Login mode={mode} />
+  return <ForgotPassword mode={mode} />
 }
 
-export default LoginPage
+export default ForgotPasswordPage
