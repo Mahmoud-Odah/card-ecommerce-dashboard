@@ -1,3 +1,5 @@
+import { fetchData } from '@/helpers/fetcher'
+
 import Catalog from '../../_components/Catalog/Catalog'
 
 const data = [
@@ -19,6 +21,12 @@ const data = [
 ]
 
 export default async function Page() {
+  const dataCatalog = await fetchData({
+    url: "/categories"
+  })
+
+  console.log('dataCatalog', dataCatalog)
+  
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
       {data.map((el, index) => (
