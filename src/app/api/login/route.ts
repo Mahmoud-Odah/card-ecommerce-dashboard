@@ -1,39 +1,56 @@
 // Next Imports
 import { NextResponse } from 'next/server'
 
-import type { UserTable } from './users'
-
-type ResponseUser = Omit<UserTable, 'password'>
-
-// Mock data for demo purpose
-import { users } from './users'
+type ResponseUser = {
+  email: string;
+  name: string;
+};
 
 export async function POST(req: Request) {
   // Vars
-  const { email, password } = await req.json()
-  const user = users.find(u => u.email === email && u.password === password)
-  let response: null | ResponseUser = null
+  const { email, password } = await req.json();
+  
+  try {
+    // Making a POST request to the external API
+    const response = await fetch('https://ecards-api.01hive.com/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    });
 
-  if (user) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...filteredUserData } = user
+    // Parsing the response from the external API
+    const data = await response.json();
 
-    response = {
-      ...filteredUserData
+    if (response.ok) {
+      // Assuming the API returns the user data upon successful authentication
+      const user: ResponseUser = data;
+
+      return NextResponse.json(user);
+    } else {
+      // We return the error response from the external API
+      return NextResponse.json(
+        {
+          // Collecting errors from the external API response
+          message: data.message || ['Email or Password is invalid']
+        },
+        {
+          status: 401,
+          statusText: 'Unauthorized Access'
+        }
+      );
     }
-
-    return NextResponse.json(response)
-  } else {
-    // We return 401 status code and error message if user is not found
+  } catch (error) {
+    // Handling network or other unexpected errors
     return NextResponse.json(
       {
-        // We create object here to separate each error message for each field in case of multiple errors
-        message: ['Email or Password is invalid']
+        message: ['An unexpected error occurred. Please try again later.']
       },
       {
-        status: 401,
-        statusText: 'Unauthorized Access'
+        status: 500,
+        statusText: 'Internal Server Error'
       }
-    )
+    );
   }
 }
