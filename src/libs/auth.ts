@@ -2,7 +2,6 @@
 import CredentialProvider from 'next-auth/providers/credentials'
 import type { NextAuthOptions } from 'next-auth'
 
-
 export const authOptions: NextAuthOptions = {
   // ** Configure one or more authentication providers
   // ** Please refer to https://next-auth.js.org/configuration/options#providers for more `providers` options
@@ -57,7 +56,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error(e.message)
         }
       }
-    }),
+    })
   ],
 
   session: {
@@ -81,11 +80,9 @@ export const authOptions: NextAuthOptions = {
      */
     async jwt({ token, user }) {
       if (user) {
-        /*
-         * For adding custom parameters to user in session, we first need to add those parameters
-         * in token which then will be available in the `session()` callback
-         */
-        token.name = user.name
+        token.access_token = user.access_token 
+        token.email = user.email 
+        token.name = user.name 
       }
 
       return token
@@ -93,7 +90,9 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         // ** Add custom params to user in session which are added in `jwt()` callback via `token` parameter
-        session.user.name = token.name
+        session.user.access_token = token.access_token as string
+        session.user.email = token.email as string
+        session.user.name = token.name as string
       }
 
       return session

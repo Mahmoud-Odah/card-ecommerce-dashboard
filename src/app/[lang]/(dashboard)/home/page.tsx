@@ -1,5 +1,4 @@
 import { fetchData } from '@/helpers/fetcher'
-
 import Catalog from '../../_components/Catalog/Catalog'
 
 const data = [
