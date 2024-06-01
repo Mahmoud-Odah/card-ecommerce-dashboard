@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server'
 type ResponseUser = {
   email: string;
   name: string;
+  access_token: string
 };
 
 export async function POST(req: Request) {
@@ -12,7 +13,7 @@ export async function POST(req: Request) {
   
   try {
     // Making a POST request to the external API
-    const response = await fetch('https://ecards-api.01hive.com/api/auth/login', {
+    const response = await fetch(`${process.env.BACKEND_API_URL}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
