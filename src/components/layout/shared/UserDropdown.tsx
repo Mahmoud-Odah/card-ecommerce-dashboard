@@ -32,6 +32,7 @@ import { useSettings } from '@core/hooks/useSettings'
 
 // Util Imports
 import { getLocalizedUrl } from '@/utils/i18n'
+import { fetchData } from '@/helpers/fetcher'
 
 // Styled component for badge content
 const BadgeContentSpan = styled('span')({
@@ -74,11 +75,19 @@ const UserDropdown = () => {
 
   const handleUserLogout = async () => {
     try {
+      await fetchData({ url: '/auth/logout', method: 'post', bodyData: {} })
+        .then(async res => {
+          console.log('res', res)
+          await signOut({ redirect: false })
+          router.push(getLocalizedUrl('/login', locale as Locale))
+        })
+        .catch(err => {
+          console.log('error: ', err)
+        })
+
       // Sign out from the app
-      await signOut({ redirect: false })
 
       // Redirect to login page
-      router.push(getLocalizedUrl('/login', locale as Locale))
     } catch (error) {
       console.error(error)
 

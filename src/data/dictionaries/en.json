@@ -2,6 +2,7 @@
   "navigation": {
     "home": "Home",
     "about": "About",
+    "transaction": "Transaction",
     "dashboards": "Dashboards",
     "crm": "CRM",
     "analytics": "Analytics",

@@ -89,6 +89,9 @@ const VerticalMenu = ({ scrollMenu, dictionary }: Props) => {
         <MenuItem href={`/${locale}/about`} icon={<i className='tabler-info-circle' />}>
           {dictionary['navigation'].about}
         </MenuItem>
+        <MenuItem href={`/${locale}/transaction`} icon={<i className='tabler-info-circle' />}>
+          {dictionary.navigation.transaction}
+        </MenuItem>
       </Menu>
       {/* <Menu
         popoutMenuOffset={{ mainAxis: 23 }}

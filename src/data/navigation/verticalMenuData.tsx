@@ -11,6 +11,11 @@ const verticalMenuData = (): VerticalMenuDataType[] => [
     label: 'About',
     href: '/about',
     icon: 'tabler-info-circle'
+  },
+  {
+    label: 'Transaction',
+    href: '/transaction',
+    icon: 'tabler-info-circle'
   }
 ]
 
