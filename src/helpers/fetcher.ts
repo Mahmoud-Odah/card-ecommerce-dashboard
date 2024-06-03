@@ -1,19 +1,21 @@
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/libs/auth";
+import { getServerSession } from 'next-auth'
+
+import { authOptions } from '@/libs/auth'
 
 type Request = {
-  url?: string;
-  headers?: { [key: string]: any };
-  bodyData?: { [key: string]: any };
-  method?: 'post' | 'get' | 'put' | 'delete';
-};
+  url?: string
+  headers?: { [key: string]: any }
+  bodyData?: { [key: string]: any }
+  method?: 'post' | 'get' | 'put' | 'delete'
+  params?: { [key: string]: any }
+}
 
-const BaseUrl = process.env.BACKEND_API_URL;
+const BaseUrl = process.env.BACKEND_API_URL
 
-export const fetchData = async ({ url, headers = {}, bodyData, method = 'get' }: Request) => {
+export const fetchData = async ({ url, params, headers = {}, bodyData, method = 'get' }: Request) => {
   try {
     // Get the session which contains the token
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions)
 
     if (!session) {
       return {
@@ -21,13 +23,22 @@ export const fetchData = async ({ url, headers = {}, bodyData, method = 'get' }:
           destination: '/login',
           permanent: false
         }
-      };
+      }
     }
 
     // Add the token to the headers
-    headers['Authorization'] = `Bearer ${session?.user?.access_token}`;
+    headers['Authorization'] = `Bearer ${session?.user?.access_token}`
 
-    console.log('headers', headers)
+    // Construct URL with query parameters for GET requests
+    let fullUrl = `${BaseUrl}/${url}`
+
+    if (method === 'get' && params) {
+      const queryString = new URLSearchParams(
+        Object.entries(params).map(([key, value]) => [key, String(value)])
+      ).toString()
+
+      fullUrl += `?${queryString}`
+    }
 
     const requestOptions = {
       method: method,
@@ -36,10 +47,9 @@ export const fetchData = async ({ url, headers = {}, bodyData, method = 'get' }:
         ...headers
       },
       body: method !== 'get' ? JSON.stringify(bodyData) : null
-    };
+    }
 
-    const res = await fetch(`${BaseUrl}/${url}`, requestOptions);
-
+    const res = await fetch(fullUrl, requestOptions)
 
     if (res.status === 401) {
       return {
@@ -47,15 +57,16 @@ export const fetchData = async ({ url, headers = {}, bodyData, method = 'get' }:
           destination: '/login',
           permanent: false
         }
-      };
+      }
     }
 
     if (!res.ok) {
-      throw new Error('Failed to fetch data');
+      throw new Error('Failed to fetch data')
     }
 
-    return res.json();
+    return res.json()
   } catch (error) {
-    console.log('fetch error : ', error);
+    console.log('fetch error:', error)
+    throw error
   }
-};
+}
