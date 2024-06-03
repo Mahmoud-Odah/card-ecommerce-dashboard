@@ -15,7 +15,15 @@ export default async function Page({ params }: any) {
   return (
     <div className='grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4'>
       {data.map((el: any) => (
-        <Catalog key={el.id} id={el.id} title={el.name} image={el.image} has_subcategories={el.has_subcategories} lang={lang} />
+        <Catalog
+          key={el.id}
+          id={el.id}
+          title={el.name}
+          image={el.image}
+          has_subcategories={el.has_subcategories}
+          lang={lang}
+          is_sub_catalog={true}
+        />
       ))}
     </div>
   )
