@@ -27,7 +27,8 @@ import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
 
 // i18n
 import type { getDictionary } from '@/utils/getDictionary'
-
+import { useEffect, useState } from 'react'
+import { fetchData } from '@/helpers/fetcher'
 
 type RenderExpandIconProps = {
   open?: boolean
@@ -52,6 +53,7 @@ const VerticalMenu = ({ scrollMenu, dictionary }: Props) => {
   const verticalNavOptions = useVerticalNav()
   const { settings } = useSettings()
   const { isBreakpointReached } = useVerticalNav()
+  const [wallet, setWallet] = useState(null)
 
   // Vars
   const { transitionDuration } = verticalNavOptions
@@ -59,6 +61,20 @@ const VerticalMenu = ({ scrollMenu, dictionary }: Props) => {
   const { lang: locale } = params
 
   const ScrollWrapper = isBreakpointReached ? 'div' : PerfectScrollbar
+
+  const getWallet = async () => {
+    try {
+      const walletRes = await fetchData({ url: 'wallet' })
+
+      setWallet(walletRes?.data?.balance)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  useEffect(() => {
+    getWallet()
+  }, [params])
 
   return (
     // eslint-disable-next-line lines-around-comment
@@ -74,6 +90,8 @@ const VerticalMenu = ({ scrollMenu, dictionary }: Props) => {
             onScrollY: container => scrollMenu(container, true)
           })}
     >
+      {/* wallet :  */}
+      {wallet && <div className='mx-3 mb-1 p-2 border rounded-md'>Wallet: <span className='text-bold text-green-600'>{wallet}$</span></div>}
       {/* Incase you also want to scroll NavHeader to scroll with Vertical Menu, remove NavHeader from above and paste it below this comment */}
       {/* Vertical Menu */}
       <Menu
