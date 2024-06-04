@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
 import { useParams } from 'next/navigation'
 
 // MUI Imports
@@ -27,7 +29,8 @@ import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
 
 // i18n
 import type { getDictionary } from '@/utils/getDictionary'
-import { useEffect, useState } from 'react'
+
+// fetch 
 import { fetchData } from '@/helpers/fetcher'
 
 type RenderExpandIconProps = {
